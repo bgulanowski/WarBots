@@ -6,14 +6,8 @@ using Mirror;
 
 public class NetworkMan : NetworkManager {
 
-    public GameObject UnitPrefab {
-        get {
-            foreach (var prefab in spawnPrefabs) {
-                if (prefab.name == "Basic Unit") {
-                    return prefab;
-                }
-            }
-            return null;
-        }
-    }
+    [SerializeField]
+    GameObject basicUnitPrefab;
+
+    public GameObject BasicUnitPrefab => basicUnitPrefab;
 }

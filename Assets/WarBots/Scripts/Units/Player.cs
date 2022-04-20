@@ -5,14 +5,21 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-    public void SpawnUnit() {
-        CmdSpawnUnit();
+    public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
+
+    public override void OnStartLocalPlayer() {
+        base.OnStartLocalPlayer();
+        FindObjectOfType<Spawner>().Player = this;
+    }
+
+    public void SpawnBasicUnit() {
+        CmdSpawnBasicUnit();
     }
 
     [Command]
-    private void CmdSpawnUnit() {
+    private void CmdSpawnBasicUnit() {
 
-        var unitPrefab = FindObjectOfType<Network>().UnitPrefab;
+        var unitPrefab = NetworkMan.BasicUnitPrefab;
         var spawnPoint = FindObjectOfType<NetworkStartPosition>().transform;
         GameObject unit = Instantiate(unitPrefab,
             spawnPoint.position,

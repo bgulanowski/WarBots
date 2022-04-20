@@ -1,22 +1,12 @@
 using UnityEngine;
-using Mirror;
 
-public class Spawner : NetworkBehaviour
+public class Spawner : MonoBehaviour
 {
-    Player Player { get; set; }
+    public Player Player { get; set; }
 
-    public void OnSpawnUnit() {
+    public void OnSpawnBasicUnit() {
         if (Player != null) {
-            Player.SpawnUnit();
-        }
-    }
-
-    public override void OnStartClient() {
-        base.OnStartClient();
-        foreach (var player in FindObjectsOfType<Player>()) {
-            if (player.isLocalPlayer) {
-                Player = player;
-            }
+            Player.SpawnBasicUnit();
         }
     }
 }
