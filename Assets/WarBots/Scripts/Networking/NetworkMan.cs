@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 
-public class Network : NetworkManager {
+public class NetworkMan : NetworkManager {
 
     public GameObject UnitPrefab {
         get {
