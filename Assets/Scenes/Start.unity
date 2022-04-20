@@ -391,6 +391,7 @@ MonoBehaviour:
   spawnPrefabs:
   - {fileID: 7878846315400025754, guid: 8ba5e5ae225a646a6a72a3bd6ceefe16, type: 3}
   basicUnitPrefab: {fileID: 7878846315400025754, guid: 8ba5e5ae225a646a6a72a3bd6ceefe16, type: 3}
+  spawner: {fileID: 6456379928815766042}
 --- !u!1 &659878800
 GameObject:
   m_ObjectHideFlags: 0

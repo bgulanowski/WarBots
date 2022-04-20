@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -7,9 +8,20 @@ public class Player : NetworkBehaviour
 {
     public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
 
+    public static Player Shared { get; private set; }
+
+    public static event Action<Player> SharedPlayerChanged;
+
     public override void OnStartLocalPlayer() {
         base.OnStartLocalPlayer();
-        FindObjectOfType<Spawner>().Player = this;
+        Shared = this;
+        SharedPlayerChanged?.Invoke(this);
+    }
+
+    public override void OnStopLocalPlayer() {
+        Shared = null;
+        SharedPlayerChanged?.Invoke(null);
+        base.OnStopLocalPlayer();
     }
 
     public void SpawnBasicUnit() {
