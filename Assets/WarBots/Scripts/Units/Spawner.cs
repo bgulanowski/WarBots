@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Spawner : MonoBehaviour
+public class Spawner : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    Player Player { get; set; }
+
+    public void OnSpawnUnit() {
+        if (Player != null) {
+            Player.SpawnUnit();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public override void OnStartClient() {
+        base.OnStartClient();
+        foreach (var player in FindObjectsOfType<Player>()) {
+            if (player.isLocalPlayer) {
+                Player = player;
+            }
+        }
     }
 }
