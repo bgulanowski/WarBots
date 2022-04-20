@@ -7,11 +7,6 @@ public class Player : NetworkBehaviour
 {
     public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
 
-    public override void OnStartLocalPlayer() {
-        base.OnStartLocalPlayer();
-        FindObjectOfType<Spawner>().Player = this;
-    }
-
     public void SpawnBasicUnit() {
         CmdSpawnBasicUnit();
     }
