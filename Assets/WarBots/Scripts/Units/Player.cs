@@ -32,10 +32,10 @@ public class Player : NetworkBehaviour
     private void CmdSpawnBasicUnit() {
 
         var unitPrefab = NetworkMan.BasicUnitPrefab;
-        var spawnPoint = FindObjectOfType<NetworkStartPosition>().transform;
+        var transform = connectionToClient.identity.transform;
         GameObject unit = Instantiate(unitPrefab,
-            spawnPoint.position,
-            spawnPoint.rotation);
+            transform.position,
+            transform.rotation);
 
         NetworkServer.Spawn(unit, connectionToClient);
     }
