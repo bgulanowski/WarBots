@@ -24,12 +24,8 @@ public class Player : NetworkBehaviour
         base.OnStopLocalPlayer();
     }
 
-    public void SpawnBasicUnit() {
-        CmdSpawnBasicUnit();
-    }
-
     [Command]
-    private void CmdSpawnBasicUnit() {
+    public void CmdSpawnBasicUnit() {
 
         var unitPrefab = NetworkMan.BasicUnitPrefab;
         var transform = connectionToClient.identity.transform;
