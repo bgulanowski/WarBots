@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4011176788371738053}
   - component: {fileID: 2108057818206815756}
   - component: {fileID: 3204332869748547573}
-  - component: {fileID: 8553967273339524668}
   - component: {fileID: 5561858493573209320}
   - component: {fileID: 7807237125092289774}
   m_Layer: 0
@@ -111,21 +110,6 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &8553967273339524668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7878846315400025754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8de6f2b24a2c4454d9bddaf30c2d23b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  agent: {fileID: 4011176788371738053}
 --- !u!65 &5561858493573209320
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -153,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  agent: {fileID: 4011176788371738053}
   outline: {fileID: 6928913351825033198}
   selectionChanged:
     m_PersistentCalls:
