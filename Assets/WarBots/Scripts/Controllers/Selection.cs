@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Selection : NetworkBehaviour
 {
-    readonly List<Unit> selected = new();
+    public readonly List<Unit> selected = new();
 
     [ClientCallback]
     private void Update() {
