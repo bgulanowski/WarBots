@@ -4,12 +4,41 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public static class Extensions {
+
+    public static Vector2 Min(this Vector2 v, Vector2 u) {
+        return new Vector2 { x = Mathf.Min(v.x, u.x), y = Mathf.Min(v.y, u.y) };
+    }
+
+    public static Vector2 Max(this Vector2 v, Vector2 u) {
+        return new Vector2 { x = Mathf.Max(v.x, u.x), y = Mathf.Max(v.y, u.y) };
+    }
+
+    public static Rect Rect(this Vector2 v, Vector2 u) {
+        Vector2 min = v.Min(u);
+        Vector2 max = v.Max(u);
+        return new Rect { position = min, size = max - min };
+    }
+
+    public static Vector2 ScreenPoint(this MonoBehaviour o) {
+        return Camera.main.WorldToScreenPoint(o.transform.position);
+    }
+}
+
 public class Selection : NetworkBehaviour
 {
-    public readonly List<Unit> selected = new();
+    public readonly HashSet<Unit> selected = new();
 
-    public bool DoSelection => Mouse.current.leftButton.wasPressedThisFrame;
+    public event System.Action<Rect> SelectionRectChanged;
+
+    public bool StartSelection => Mouse.current.leftButton.wasPressedThisFrame;
+    public bool EndSelection => Mouse.current.leftButton.wasReleasedThisFrame;
     public bool ExtendSelection => Keyboard.current.shiftKey.isPressed;
+    public Rect SelectionRect => mouseDown.Rect(Mouse.current.position.ReadValue());
+
+    HashSet<Unit> extendedSelected = new();
+    Vector2 mouseDown;
+    bool dragging;
 
     [ClientCallback]
     private void Update() {
@@ -24,32 +53,76 @@ public class Selection : NetworkBehaviour
         return Physics.Raycast(MouseRay(), out hit, Mathf.Infinity);
     }
 
-    public static bool DidSelect<T>(out T unit) where T: class {
-        unit = null;
-        return Raycast(out RaycastHit hit) && hit.transform.TryGetComponent(out unit);
+    public static bool DidSelect<T>(out T component) where T:NetworkBehaviour {
+        component = null;
+        return Raycast(out RaycastHit hit) &&
+            hit.transform.TryGetComponent(out component) &&
+            component.hasAuthority;
+    }
+
+    public static void DidSelect<T>(Vector2 start, out List<T> comps) where T:NetworkBehaviour {
+
+        comps = new();
+
+        Rect bounds = start.Rect(Mouse.current.position.ReadValue());
+
+        foreach (var comp in FindObjectsOfType<T>()) {
+            if (comp.hasAuthority && bounds.Contains(comp.ScreenPoint())) {
+                comps.Add(comp);
+            }
+        }
     }
 
     [Client]
     private void UpdateSelection() {
 
-        if (DoSelection) {
+        if (EndSelection) {
 
             if (!ExtendSelection) {
-                DeselectAll();
+                DeselectAll(selected);
             }
 
-            if (DidSelect(out Unit unit) && unit.hasAuthority) {
-                unit.Select(true);
-                selected.Add(unit);
+            if (SelectionRect.Empty()) {
+                if (DidSelect(out Unit unit)) {
+                    unit.Select(true);
+                    selected.Add(unit);
+                }
             }
+            else {
+                selected.ExceptWith(extendedSelected);
+                RefreshExtendedSelected(Rect.zero);
+                selected.UnionWith(extendedSelected);
+                extendedSelected.Clear();
+            }
+            dragging = false;
+        }
+        else if(StartSelection) {
+            mouseDown = Mouse.current.position.ReadValue();
+            dragging = true;
+        }
+        else if (dragging) {
+            RefreshExtendedSelected(SelectionRect);
+        }
+
+        void RefreshExtendedSelected(Rect rect) {
+
+            DeselectAll(extendedSelected);
+
+            DidSelect(mouseDown, out List<Unit> units);
+            foreach (var unit in units) {
+                unit.Select(true);
+                extendedSelected.Add(unit);
+            }
+
+            SelectionRectChanged?.Invoke(rect);
         }
     }
 
     [Client]
-    private void DeselectAll() {
-        foreach (var unit in selected) {
+    private void DeselectAll(HashSet<Unit> units) {
+        foreach (var unit in units) {
             unit.Select(false);
         }
-        selected.Clear();
+        units.Clear();
     }
 }
