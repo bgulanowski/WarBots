@@ -8,25 +8,34 @@ public class Selection : NetworkBehaviour
 {
     public readonly List<Unit> selected = new();
 
+    public bool DoSelection => Mouse.current.leftButton.wasPressedThisFrame;
+    public bool ExtendSelection => Keyboard.current.shiftKey.isPressed;
+
     [ClientCallback]
     private void Update() {
         UpdateSelection();
     }
 
+    public static bool Raycast(out RaycastHit hit) {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        return Physics.Raycast(ray, out hit, Mathf.Infinity);
+    }
+
+    public static bool DidSelectUnit(out Unit unit) {
+        unit = null;
+        return Raycast(out RaycastHit hit) && hit.transform.TryGetComponent(out unit);
+    }
+
     [Client]
     private void UpdateSelection() {
 
-        if (Mouse.current.leftButton.wasPressedThisFrame) {
+        if (DoSelection) {
 
-            if (!Keyboard.current.shiftKey.isPressed) {
+            if (!ExtendSelection) {
                 DeselectAll();
             }
 
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity) &&
-                hit.transform.TryGetComponent(out Unit unit) &&
-                unit.hasAuthority) {
+            if (DidSelectUnit(out Unit unit) && unit.hasAuthority) {
                 unit.Select(true);
                 selected.Add(unit);
             }
