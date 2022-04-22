@@ -32,9 +32,9 @@ public class Selection : NetworkBehaviour
 
     public event System.Action<Rect> SelectionRectChanged;
 
-    public bool StartSelection => Mouse.current.leftButton.wasPressedThisFrame;
-    public bool EndSelection => Mouse.current.leftButton.wasReleasedThisFrame;
-    public bool ExtendSelection => Keyboard.current.shiftKey.isPressed;
+    public static bool StartSelection => Mouse.current.leftButton.wasPressedThisFrame;
+    public static bool EndSelection => Mouse.current.leftButton.wasReleasedThisFrame;
+    public static bool ExtendSelection => Keyboard.current.shiftKey.isPressed;
     public static bool IgnoreMouse => EventSystem.current.IsPointerOverGameObject();
     public Rect SelectionRect => mouseDown.Rect(Mouse.current.position.ReadValue());
 
