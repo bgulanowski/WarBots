@@ -7,6 +7,35 @@ public class Player : NetworkBehaviour
 {
     public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
 
+    public IEnumerable<Unit> Units => units;
+
+    public static Player Shared { get; private set; }
+
+    readonly SyncHashSet<Unit> units = new();
+
+    #region Client
+    public override void OnStartClient() {
+        base.OnStartClient();
+        Shared = this;
+    }
+
+    public override void OnStopClient() {
+        base.OnStopClient();
+    }
+    #endregion
+
+    #region Server
+
+    public override void OnStartServer() {
+        Unit.Started += OnUnitStarted;
+        Unit.Stopped += OnUnitStopped;        
+    }
+
+    public override void OnStopServer() {
+        Unit.Started -= OnUnitStarted;
+        Unit.Stopped -= OnUnitStopped;
+    }
+
     [Command]
     public void CmdSpawnBasicUnit() {
 
@@ -18,4 +47,13 @@ public class Player : NetworkBehaviour
 
         NetworkServer.Spawn(unit, connectionToClient);
     }
+
+    private void OnUnitStopped(Unit obj) {
+        units.Remove(obj);
+    }
+
+    private void OnUnitStarted(Unit obj) {
+        units.Add(obj);
+    }
+    #endregion
 }

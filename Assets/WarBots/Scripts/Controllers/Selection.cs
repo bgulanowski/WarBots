@@ -38,7 +38,7 @@ public class Selection : NetworkBehaviour
     public static bool IgnoreMouse => EventSystem.current.IsPointerOverGameObject();
     public Rect SelectionRect => mouseDown.Rect(Mouse.current.position.ReadValue());
 
-    HashSet<Unit> extendedSelected = new();
+    readonly HashSet<Unit> extendedSelected = new();
     Vector2 mouseDown;
     bool dragging;
 
@@ -57,20 +57,21 @@ public class Selection : NetworkBehaviour
         return Physics.Raycast(MouseRay(), out hit, Mathf.Infinity);
     }
 
-    public static bool DidSelect<T>(out T component) where T:NetworkBehaviour {
+    public static bool DidSelect(out Unit component) {
         component = null;
         return Raycast(out RaycastHit hit) &&
             hit.transform.TryGetComponent(out component) &&
             component.hasAuthority;
     }
 
-    public static void DidSelect<T>(Vector2 start, out List<T> comps) where T:NetworkBehaviour {
+    [Client]
+    public static void DidSelect(Vector2 start, out List<Unit> comps) {
 
         comps = new();
 
         Rect bounds = start.Rect(Mouse.current.position.ReadValue());
 
-        foreach (var comp in FindObjectsOfType<T>()) {
+        foreach (var comp in Player.Shared.Units) {
             if (comp.hasAuthority && bounds.Contains(comp.ScreenPoint())) {
                 comps.Add(comp);
             }
