@@ -4,22 +4,37 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Mirror;
 
+public static class TerrainUtilities {
+
+    public static bool DidSelectDestination(this Transform terrain, out Vector3 dest) {
+        dest = Vector3.zero;
+        if (Selection.Raycast(out RaycastHit hit) && hit.transform == terrain) {
+            dest = hit.point;
+            return true;
+        }
+        return false;
+    }
+}
+
 public class Movement : NetworkBehaviour
 {
     [SerializeField]
+    Transform terrain;
+
+    [SerializeField]
     Selection selection;
+
+    public bool DoMove => Mouse.current.rightButton.wasPressedThisFrame;
 
     [ClientCallback]
     private void Update() {
 
-        if (!Mouse.current.rightButton.wasPressedThisFrame) { return; }
+        if (!DoMove) { return; }
 
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)) { return; }
-
-        foreach (var unit in selection.selected) {
-            unit.CmdMove(hit.point);
+        if (terrain.DidSelectDestination(out Vector3 dest)) {
+            foreach (var unit in selection.selected) {
+                unit.CmdMove(dest);
+            }
         }
     }
 }
