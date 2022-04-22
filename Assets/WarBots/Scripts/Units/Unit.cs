@@ -4,12 +4,16 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.Events;
 using UnityEngine.AI;
+using System;
 
 public class Unit : NetworkBehaviour
 {
     [SerializeField] NavMeshAgent agent = null;
     [SerializeField] Outline outline;
     [SerializeField] UnityEvent<bool> selectionChanged;
+
+    static public event Action<Unit> Started;
+    static public event Action<Unit> Stopped;
 
     #region Client
     public override void OnStartAuthority() {
@@ -24,6 +28,14 @@ public class Unit : NetworkBehaviour
     #endregion
 
     #region Server
+
+    public override void OnStartServer() {
+        Started?.Invoke(this);
+    }
+
+    public override void OnStopServer() {
+        Stopped?.Invoke(this);
+    }
 
     [Command]
     public void CmdMove(Vector3 position) {

@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public Player Player { get; set; }
-
     public void OnSpawnBasicUnit() {
-        if (Player != null) {
-            Player.CmdSpawnBasicUnit();
+        if (Player.Shared != null) {
+            Debug.Log("Requesting unit spawn");
+            Player.Shared.CmdSpawnBasicUnit();
         }
     }
 }
