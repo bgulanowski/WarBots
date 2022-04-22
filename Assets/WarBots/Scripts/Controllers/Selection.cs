@@ -16,12 +16,15 @@ public class Selection : NetworkBehaviour
         UpdateSelection();
     }
 
-    public static bool Raycast(out RaycastHit hit) {
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        return Physics.Raycast(ray, out hit, Mathf.Infinity);
+    public static Ray MouseRay() {
+        return Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     }
 
-    public static bool DidSelectUnit(out Unit unit) {
+    public static bool Raycast(out RaycastHit hit) {
+        return Physics.Raycast(MouseRay(), out hit, Mathf.Infinity);
+    }
+
+    public static bool DidSelect<T>(out T unit) where T: class {
         unit = null;
         return Raycast(out RaycastHit hit) && hit.transform.TryGetComponent(out unit);
     }
@@ -35,7 +38,7 @@ public class Selection : NetworkBehaviour
                 DeselectAll();
             }
 
-            if (DidSelectUnit(out Unit unit) && unit.hasAuthority) {
+            if (DidSelect(out Unit unit) && unit.hasAuthority) {
                 unit.Select(true);
                 selected.Add(unit);
             }
