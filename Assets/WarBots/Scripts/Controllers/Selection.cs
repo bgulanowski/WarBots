@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public static class Extensions {
 
@@ -34,6 +35,7 @@ public class Selection : NetworkBehaviour
     public bool StartSelection => Mouse.current.leftButton.wasPressedThisFrame;
     public bool EndSelection => Mouse.current.leftButton.wasReleasedThisFrame;
     public bool ExtendSelection => Keyboard.current.shiftKey.isPressed;
+    public static bool IgnoreMouse => EventSystem.current.IsPointerOverGameObject();
     public Rect SelectionRect => mouseDown.Rect(Mouse.current.position.ReadValue());
 
     HashSet<Unit> extendedSelected = new();
@@ -42,7 +44,9 @@ public class Selection : NetworkBehaviour
 
     [ClientCallback]
     private void Update() {
-        UpdateSelection();
+        if (Player.Shared != null && !IgnoreMouse) {
+            UpdateSelection();
+        }
     }
 
     public static Ray MouseRay() {
