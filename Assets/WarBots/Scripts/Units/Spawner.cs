@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour
 
     public void OnSpawnBasicUnit() {
         if (Player != null) {
-            Player.SpawnBasicUnit();
+            Player.CmdSpawnBasicUnit();
         }
     }
 }

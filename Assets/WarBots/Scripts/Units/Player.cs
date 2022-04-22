@@ -7,12 +7,8 @@ public class Player : NetworkBehaviour
 {
     public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
 
-    public void SpawnBasicUnit() {
-        CmdSpawnBasicUnit();
-    }
-
     [Command]
-    private void CmdSpawnBasicUnit() {
+    public void CmdSpawnBasicUnit() {
 
         var unitPrefab = NetworkMan.BasicUnitPrefab;
         var transform = connectionToClient.identity.transform;
