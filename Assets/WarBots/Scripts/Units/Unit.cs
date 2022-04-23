@@ -16,8 +16,8 @@ public class Unit : NetworkBehaviour
     static public event Action<Unit> Stopped;
 
     #region Client
-    public override void OnStartAuthority() {
-        base.OnStartAuthority();
+    public override void OnStartClient() {
+        base.OnStartClient();
         outline.enabled = false;
     }
 
