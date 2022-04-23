@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -448,7 +448,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 227958200}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 4
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 2103526575985548685, guid: 30315dd849c5241f48b8f007a2ce964e, type: 3}
   autoCreatePlayer: 1
@@ -18362,7 +18362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18948,7 +18948,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -19101,7 +19101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 7572702535830376761, guid: 139618b71a60e4ff4b8d4382665770da, type: 3}
       propertyPath: m_LocalPosition.z
