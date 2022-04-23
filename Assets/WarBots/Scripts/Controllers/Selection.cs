@@ -86,7 +86,7 @@ public class Selection : NetworkBehaviour
             }
 
             if (SelectionRect.Empty()) {
-                if (DidSelect(out Unit unit)) {
+                if (DidSelect(out Unit unit) && !selected.Contains(unit)) {
                     unit.Select(true);
                     selected.Add(unit);
                 }
@@ -113,8 +113,10 @@ public class Selection : NetworkBehaviour
 
             DidSelect(mouseDown, out List<Unit> units);
             foreach (var unit in units) {
-                unit.Select(true);
-                extendedSelected.Add(unit);
+                if (!selected.Contains(unit)) {
+                    unit.Select(true);
+                    extendedSelected.Add(unit);
+                }
             }
 
             SelectionRectChanged?.Invoke(rect);

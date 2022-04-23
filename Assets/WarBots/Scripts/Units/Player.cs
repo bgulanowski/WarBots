@@ -38,6 +38,10 @@ public class Player : NetworkBehaviour
         Unit.Stopped -= OnUnitStopped;
     }
 
+    bool SameOwner(NetworkBehaviour nb) {
+        return connectionToClient == nb.connectionToClient;
+    }
+
     [Command]
     public void CmdSpawnBasicUnit() {
 
@@ -50,12 +54,16 @@ public class Player : NetworkBehaviour
         NetworkServer.Spawn(unit, connectionToClient);
     }
 
-    private void OnUnitStopped(Unit obj) {
-        units.Remove(obj);
+    private void OnUnitStopped(Unit unit) {
+        if (SameOwner(unit)) {
+            units.Remove(unit);
+        }
     }
 
-    private void OnUnitStarted(Unit obj) {
-        units.Add(obj);
+    private void OnUnitStarted(Unit unit) {
+        if (SameOwner(unit)) {
+            units.Add(unit);
+        }
     }
     #endregion
 }

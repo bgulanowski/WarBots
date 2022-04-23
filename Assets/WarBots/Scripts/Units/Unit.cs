@@ -29,6 +29,14 @@ public class Unit : NetworkBehaviour
 
     #region Server
 
+    [ServerCallback]    
+    private void Update() {
+        if (!agent.hasPath || agent.remainingDistance > agent.stoppingDistance) {
+            return;
+        }
+        agent.ResetPath();
+    }
+
     public override void OnStartServer() {
         Started?.Invoke(this);
     }
