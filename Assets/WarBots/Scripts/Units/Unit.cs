@@ -9,11 +9,24 @@ using System;
 public class Unit : NetworkBehaviour
 {
     [SerializeField] NavMeshAgent agent = null;
+    [SerializeField] MeshRenderer flagRenderer;
     [SerializeField] Outline outline;
     [SerializeField] UnityEvent<bool> selectionChanged;
 
     static public event Action<Unit> Started;
     static public event Action<Unit> Stopped;
+
+    public FlagColor Flag {
+        get => _flag;
+        set => _flag = value;
+    }
+
+    [SyncVar(hook = nameof(FlagChanged))] FlagColor _flag;
+
+    private void FlagChanged(FlagColor _, FlagColor newFlag) {
+        flagRenderer.material = Players.Shared.FlagMaterial(newFlag);
+        outline.OutlineColor = flagRenderer.material.color;
+    }
 
     #region Client
     public override void OnStartClient() {

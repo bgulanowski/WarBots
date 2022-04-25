@@ -4,11 +4,23 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
+public enum FlagColor {
+    Teal,
+    Red,
+    Blue,
+    Yellow
+}
+
 public class Player : NetworkBehaviour
 {
-    public NetworkMan NetworkMan => NetworkManager.singleton as NetworkMan;
-
     public static Player Shared { get; private set; }
+
+    public FlagColor FlagColor {
+        get => _flagColor;
+        set => _flagColor = value;
+    }
+
+    [SyncVar] FlagColor _flagColor;
 
     public IEnumerable<Unit> Units => units;
 
@@ -30,10 +42,12 @@ public class Player : NetworkBehaviour
 
     public override void OnStartServer() {
         Unit.Started += OnUnitStarted;
-        Unit.Stopped += OnUnitStopped;        
+        Unit.Stopped += OnUnitStopped;
+        Players.Shared.AddPlayer(this);
     }
 
     public override void OnStopServer() {
+        Players.Shared.RemovePlayer(this);
         Unit.Started -= OnUnitStarted;
         Unit.Stopped -= OnUnitStopped;
     }
@@ -45,13 +59,12 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSpawnBasicUnit() {
 
-        var unitPrefab = NetworkMan.BasicUnitPrefab;
-        var transform = connectionToClient.identity.transform;
-        GameObject unit = Instantiate(unitPrefab,
+        var unitPrefab = NetworkMan.Shared.BasicUnitPrefab;
+        GameObject go = Instantiate(unitPrefab,
             transform.position,
             transform.rotation);
 
-        NetworkServer.Spawn(unit, connectionToClient);
+        NetworkServer.Spawn(go, connectionToClient);
     }
 
     private void OnUnitStopped(Unit unit) {
@@ -62,6 +75,7 @@ public class Player : NetworkBehaviour
 
     private void OnUnitStarted(Unit unit) {
         if (SameOwner(unit)) {
+            unit.Flag = FlagColor;
             units.Add(unit);
         }
     }
