@@ -11,7 +11,6 @@ public class Unit : NetworkBehaviour
     [SerializeField] NavMeshAgent agent = null;
     [SerializeField] MeshRenderer flagRenderer;
     [SerializeField] Outline outline;
-    [SerializeField] UnityEvent<bool> selectionChanged;
 
     static public event Action<Unit> Started;
     static public event Action<Unit> Stopped;
@@ -26,17 +25,15 @@ public class Unit : NetworkBehaviour
     private void FlagChanged(FlagColor _, FlagColor newFlag) {
         flagRenderer.material = Players.Shared.FlagMaterial(newFlag);
         outline.OutlineColor = flagRenderer.material.color;
+        outline.enabled = false;
+        outline.OutlineMode = Outline.Mode.OutlineAll;
     }
 
     #region Client
-    public override void OnStartClient() {
-        base.OnStartClient();
-        outline.enabled = false;
-    }
 
     [Client]
     public void Select(bool selected) {
-        selectionChanged?.Invoke(selected);
+        outline.enabled = selected;
     }
     #endregion
 

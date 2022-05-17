@@ -5,6 +5,7 @@ using Mirror;
 using UnityEngine;
 
 public enum FlagColor {
+    None = -1,
     Teal,
     Red,
     Blue,
@@ -20,7 +21,7 @@ public class Player : NetworkBehaviour
         set => _flagColor = value;
     }
 
-    [SyncVar] FlagColor _flagColor;
+    [SyncVar] FlagColor _flagColor = FlagColor.None;
 
     public IEnumerable<Unit> Units => units;
 
