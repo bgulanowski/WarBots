@@ -59,12 +59,19 @@ public class Player : NetworkBehaviour
 
     [Command]
     public void CmdSpawnBasicUnit() {
+        SpawnUnit(NetworkMan.Shared.BasicUnitPrefab);
+    }
 
-        var unitPrefab = NetworkMan.Shared.BasicUnitPrefab;
-        GameObject go = Instantiate(unitPrefab,
+    [Command]
+    public void CmdSpawnTankUnit() {
+        SpawnUnit(NetworkMan.Shared.TankUnitPrefab);
+    }
+
+    [Server]
+    void SpawnUnit(GameObject prefab) {
+        GameObject go = Instantiate(prefab,
             transform.position,
             transform.rotation);
-
         NetworkServer.Spawn(go, connectionToClient);
     }
 
